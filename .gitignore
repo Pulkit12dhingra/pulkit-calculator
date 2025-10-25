@@ -1,0 +1,19 @@
+.venv/
+dist/
+build/
+*.egg-info/
+.env
+.pytest_cache/
+__pycache__/
+.DS_Store
+/.vscode/
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv

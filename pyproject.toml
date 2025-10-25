@@ -1,0 +1,39 @@
+[project]
+name = "pulkit-calculator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { file = "LICENSE" }
+authors = [{ name = "Pulkit Dhingra", email = "pulkit12dhingra@gmail.com" }]
+keywords = ["calculator", "example", "demo"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "build>=1.3.0",
+    "pandas>=2.3.3",
+    "twine>=6.2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "build>=1.2", "twine>=6.0"]
+
+[project.scripts]
+calculator = "pulkit_calculator.core:main"
+
+[project.urls]
+Home = "https://example.com/your-repo"
+Repository = "https://example.com/your-repo.git"
+Documentation = "https://example.com/your-repo/docs"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
