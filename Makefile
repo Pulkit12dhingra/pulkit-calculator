@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 PY := python
 
-.PHONY: help check lint type test git-commit git-push git-release
+.PHONY: help check lint type test git-commit git-push git-release release-pypi push
 
 help:
 	@echo "Makefile targets:"
@@ -12,6 +12,21 @@ help:
 	@echo "  make git-commit m='<message>'   # git add, commit (handles .git/index.lock)"
 	@echo "  make git-push      # push current branch to origin"
 	@echo "  make git-release m='<message>' v='<version>'  # commit, tag and push"
+	@echo "  make release-pypi  # build and upload to PyPI (requires TWINE_PASSWORD env var)"
+	@echo "  make push          # commit all changes with version, tag and push"
+push:
+	@version=$$(grep '^version' pyproject.toml | head -1 | cut -d'=' -f2 | tr -d '" '); \
+	if [ -z "$$version" ]; then \
+	  echo 'ERROR: Could not find version in pyproject.toml'; exit 1; \
+	fi; \
+	if [ -f .git/index.lock ]; then \
+	  echo ".git/index.lock found — removing to avoid deadlock"; \
+	  rm -f .git/index.lock; \
+	fi; \
+	git add -A; \
+	git commit -m "chore: release v$$version"; \
+	git tag -a v$$version -m "Release v$$version"; \
+	git push origin HEAD --tags
 
 lint:
 	@echo "Running ruff..."
@@ -48,3 +63,9 @@ git-release:
 	@$(MAKE) git-commit m="$(m)"
 	@git tag -a v$(v) -m "$(m)"
 	@git push origin HEAD --tags
+
+release-pypi:
+	@echo "Building and uploading to PyPI..."
+	@python -m build
+	@TWINE_USERNAME=__token__ TWINE_PASSWORD="$$TWINE_PASSWORD" python -m twine upload dist/*
+	@echo "Done."

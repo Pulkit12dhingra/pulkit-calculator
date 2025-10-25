@@ -7,6 +7,8 @@ build/
 __pycache__/
 .DS_Store
 /.vscode/
+
+PROJECT_EXPLAIN.md
 # Python-generated files
 __pycache__/
 *.py[oc]
