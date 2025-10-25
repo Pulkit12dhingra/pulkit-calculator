@@ -16,6 +16,22 @@ def mul(a: float, b: float) -> float:
     """Return a * b."""
     return a * b
 
+def pow(a: float, b: float) -> float:
+    """Return a ** b."""
+    return a ** b
+
+def mod(a: float, b: float) -> float:
+    """Return a % b. Raises ZeroDivisionError on modulo by zero."""
+    if b == 0:
+        raise ZeroDivisionError("modulo by zero")
+    return a % b
+
+def floordiv(a: float, b: float) -> float:
+    """Return floor division a // b. Raises ZeroDivisionError on division by zero."""
+    if b == 0:
+        raise ZeroDivisionError("division by zero")
+    return a // b
+
 def div(a: float, b: float) -> float:
     """Return a / b. Raises ZeroDivisionError on division by zero."""
     if b == 0:

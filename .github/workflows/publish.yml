@@ -1,12 +1,16 @@
-name: Publish Python Package
+name: CI / Publish
 
 on:
   push:
     tags:
       - 'v*'
+    branches:
+      - main
+      - master
+  pull_request:
 
 jobs:
-  publish:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,16 +19,30 @@ jobs:
         with:
           python-version: '3.x'
       - name: Install dev deps
-        run: python -m pip install --upgrade pip build twine pytest
+        run: python -m pip install --upgrade pip build twine pytest ruff mypy
+      - name: Lint (ruff)
+        run: python -m ruff check src tests
+      - name: Type check (mypy)
+        run: python -m mypy src
       - name: Run tests
-        run: |
-          python -m pytest -q
+        run: python -m pytest -q
+
+  publish:
+    needs: ci
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install build deps
+        run: python -m pip install --upgrade pip build twine
       - name: Build
         run: python -m build
       - name: Publish to PyPI
-        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
         env:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          python -m twine upload dist/*
+        run: python -m twine upload dist/*
