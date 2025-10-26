@@ -67,5 +67,5 @@ git-release:
 release-pypi:
 	@echo "Building and uploading to PyPI..."
 	@python -m build
-	@TWINE_USERNAME=__token__ TWINE_PASSWORD="$$TWINE_PASSWORD" python -m twine upload dist/*
+	@TWINE_USERNAME=__token__ TWINE_PASSWORD="$$PYPI_API_TOKEN" python -m twine upload dist/*
 	@echo "Done."
