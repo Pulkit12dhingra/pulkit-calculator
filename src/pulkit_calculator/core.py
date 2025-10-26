@@ -156,11 +156,11 @@ def hcf(a: int, b: int) -> int:
 
 
 def derivative(
-    func: Callable[[float], float], x: float, h: float = 1e-6, order: int = 1
+    func: Callable[[float], float], x: float, h: float = 1e-5, order: int = 1
 ) -> float:
     """Numerical derivative of *func* at point *x*.
 
-    Uses central difference for 1st order and a simple stencil for 2nd order.
+    Uses accurate five-point central difference stencils.
 
     Args:
         func: Function f(x).
@@ -177,9 +177,22 @@ def derivative(
     if h <= 0:
         raise ValueError("h must be positive")
     if order == 1:
-        return (func(x + h) - func(x - h)) / (2.0 * h)
+        # f'(x) ≈ [-f(x+2h) + 8 f(x+h) - 8 f(x-h) + f(x-2h)] / (12h)
+        return (
+            -func(x + 2.0 * h)
+            + 8.0 * func(x + h)
+            - 8.0 * func(x - h)
+            + func(x - 2.0 * h)
+        ) / (12.0 * h)
     if order == 2:
-        return (func(x + h) - 2.0 * func(x) + func(x - h)) / (h * h)
+        # f''(x) ≈ [-f(x+2h) + 16 f(x+h) - 30 f(x) + 16 f(x-h) - f(x-2h)] / (12 h^2)
+        return (
+            -func(x + 2.0 * h)
+            + 16.0 * func(x + h)
+            - 30.0 * func(x)
+            + 16.0 * func(x - h)
+            - func(x - 2.0 * h)
+        ) / (12.0 * h * h)
     raise ValueError("only order 1 or 2 are supported")
 
 

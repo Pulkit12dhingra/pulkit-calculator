@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from core import (
+from pulkit_calculator.core import (
     add,
     sub,
     mul,
@@ -122,12 +122,12 @@ def test_linear_algebra_basic():
 def test_linear_algebra_inverse_and_solve():
     A = [[4.0, 7.0], [2.0, 6.0]]
     inv = mat_inverse(A)
-    # A @ inv == I
-    I = mat_mul(A, inv)
-    assert pytest.approx(I[0][0], rel=1e-9) == 1.0
-    assert pytest.approx(I[1][1], rel=1e-9) == 1.0
-    assert pytest.approx(I[0][1], abs=1e-9) == 0.0
-    assert pytest.approx(I[1][0], abs=1e-9) == 0.0
+    # A @ inv should be the identity matrix
+    identity = mat_mul(A, inv)
+    assert pytest.approx(identity[0][0], rel=1e-9) == 1.0
+    assert pytest.approx(identity[1][1], rel=1e-9) == 1.0
+    assert pytest.approx(identity[0][1], abs=1e-9) == 0.0
+    assert pytest.approx(identity[1][0], abs=1e-9) == 0.0
 
     b = [1.0, 0.0]
     x = mat_solve(A, b)
